@@ -1,3 +1,3 @@
-module github.com/abc463774475/bbTool
+module bbTool
 
 go 1.13
