@@ -12,6 +12,7 @@ import (
 	"bytes"
 	"strings"
 	"fmt"
+	"time"
 )
 
 func GetId() string {
@@ -29,6 +30,24 @@ func GetId() string {
 	}()
 	//return GetMd5(string(data))
 }
+
+func GetId_timer() string  {
+	curTime := time.Now()
+	t := "20060102150405"
+	//n_log.Info("len  %v",len(t))
+	//
+	//
+	str := curTime.Format(t)+fmt.Sprintf("%v%v",curTime.Nanosecond(),GetRandInt32())
+	//u1 := fmt.Sprintf("%v",curTime.UnixNano())
+	//u2 := fmt.Sprintf("%v",GetRandInt32())
+	//n_log.Info("u1   %v   %v",u1,len(u1))
+	//n_log.Info("u2   %v   %v",u2,len(u2))
+	//
+	//
+	//str := fmt.Sprintf("%v%v",u1,u2)
+	return str
+}
+
 
 func GetMd5(data string) string {
 	h := md5.New()

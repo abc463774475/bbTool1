@@ -8,10 +8,10 @@ import (
 
 func (self *TickControl) Add(interval int, period time.Duration, f func(i interface{})) int {
 	self.iCount++
-	st := &BaseInfo{self.iCount, interval, period, false, }
+	st := &BaseInfo{self.iCount, interval, period, false, nil}
 
 	icount := self.iCount
-	time.AfterFunc(period, func() {
+	st.t = time.AfterFunc(period, func() {
 		// todo 这儿有bug 哈？？？知道否 ？？？ bug？？  close channel  知道 ？？？
 		defer func() {
 			if err := recover() ; err != nil {
@@ -33,10 +33,11 @@ func (self *TickControl) Add(interval int, period time.Duration, f func(i interf
 
 func (self *TickControl) Del(i int) {
 	{
-		_, ok := self.data[i]
+		ptmp, ok := self.data[i]
 		if !ok {
 			n_log.Erro("cur id is dele", i)
 		}else {
+			ptmp.t.Stop()
 			delete(self.data, i)
 		}
 	}
@@ -53,7 +54,7 @@ func (self *TickControl) Del(i int) {
 func Handle(tick *TickControl, id int) {
 	info := tick.data[id]
 	if info == nil {
-//		n_log.Debug("tick err  tick have delete  %v",id)
+		n_log.Debug("tick err  tick have delete  %v",id)
 		return
 	}
 

@@ -9,6 +9,8 @@ type BaseInfo struct {
 	totalTimes   int           // 总共次数
 	oneTimeLimit time.Duration // 持续时间
 	isClose bool    		   // 是否删除
+
+	t *time.Timer			   // 是否需要  ，，这里有删除流程   t.Stop
 }
 
 type TickControl struct {
@@ -22,6 +24,7 @@ type TickControl struct {
 func (self *TickControl) Init() {
 	self.C = make(chan int, 100)
 	self.iCount = 1
+
 	self.data = make(map[int]*BaseInfo)
 	self.fun = make(map[int]TickFun)
 }
@@ -29,6 +32,10 @@ func (self *TickControl) Init() {
 func (self *TickControl) Delete() {
 	close(self.C)
 	self.C = nil
+
+	for _,v := range self.data {
+		v.t.Stop()
+	}
 
 	self.data = map[int]*BaseInfo{}
 	self.fun = make(map[int]TickFun)
